@@ -22,14 +22,13 @@ public class RegistrationService {
     }
 
     public boolean registerUser(CustomUser user) {
-        if(userService.existsByUsername(user.getUsername())) {
+        if (userService.existsByUsername(user.getUsername())) {
             return false;
         }
         user.setPassword(encoder.encode(user.getPassword()));
         user.setEnabled(true);
         user.setRole(Role.USER); //TODO: Gonna seed admin account.
         userService.save(user);
-        // one-to-one, setup cart for user on registration to avoid issues.
         Cart cart = new Cart();
         cart.setUser(user);
         cartService.save(cart);

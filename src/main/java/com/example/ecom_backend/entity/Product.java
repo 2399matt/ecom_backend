@@ -16,6 +16,9 @@ public class Product {
 
     private int stock;
 
+    @Column(name = "times_added", columnDefinition = "int default 0")
+    private int timesAddedToCart;
+
     public Product() {
 
     }
@@ -26,6 +29,14 @@ public class Product {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public synchronized int getTimesAddedToCart() {
+        return timesAddedToCart;
+    }
+
+    public synchronized void setTimesAddedToCart(int timesAddedToCart) {
+        this.timesAddedToCart = timesAddedToCart;
     }
 
     public String getName() {

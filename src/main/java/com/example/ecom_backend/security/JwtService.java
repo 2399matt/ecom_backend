@@ -6,7 +6,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.Role;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -41,7 +40,6 @@ public class JwtService {
     }
 
     public String extractUsername(String token) {
-        // extract the username from jwt token
         return extractClaim(token, claims -> claims.getSubject());
     }
 

@@ -3,6 +3,7 @@ package com.example.ecom_backend.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,7 +14,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartProduct> cartProducts;
 
     @OneToOne
@@ -57,5 +58,12 @@ public class Cart {
 
     public void setTotal(float total) {
         this.total = total;
+    }
+
+    public void addProduct(CartProduct cartProduct) {
+        if (cartProducts == null) {
+            cartProducts = new ArrayList<>();
+        }
+        cartProducts.add(cartProduct);
     }
 }

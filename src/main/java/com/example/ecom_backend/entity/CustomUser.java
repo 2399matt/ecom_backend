@@ -1,9 +1,6 @@
 package com.example.ecom_backend.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.query.Order;
-
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -18,9 +15,6 @@ public class CustomUser {
     private String password;
 
     private boolean enabled;
-
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private Cart cart;
 
     //TODO: User will have Orders once the entity has actually been created.
 //    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -68,14 +62,6 @@ public class CustomUser {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
     }
 
 //    public List<Order> getOrders() {

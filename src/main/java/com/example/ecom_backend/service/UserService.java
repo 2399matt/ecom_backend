@@ -2,7 +2,7 @@ package com.example.ecom_backend.service;
 
 import com.example.ecom_backend.dao.UserRepo;
 import com.example.ecom_backend.entity.CustomUser;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.ecom_backend.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +27,16 @@ public class UserService {
 
     public CustomUser findByUsername(String username) {
         return userRepo.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found!"));
+    }
+
+    public CustomUser findById(int id) {
+        return userRepo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id: " + id + " not found!"));
+    }
+
+    public long getActiveUserCount() {
+        return userRepo.getActiveUserCount();
     }
 
     @Transactional
