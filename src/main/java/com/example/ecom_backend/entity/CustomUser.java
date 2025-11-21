@@ -16,9 +16,7 @@ public class CustomUser {
 
     private boolean enabled;
 
-    //TODO: User will have Orders once the entity has actually been created.
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//    private List<Order> orders;
+    private String email;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -64,13 +62,13 @@ public class CustomUser {
         this.enabled = enabled;
     }
 
-//    public List<Order> getOrders() {
-//        return orders;
-//    }
-//
-//    public void setOrders(List<Order> orders) {
-//        this.orders = orders;
-//    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public Role getRole() {
         return role;

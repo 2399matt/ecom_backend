@@ -4,6 +4,7 @@ import com.example.ecom_backend.dto.CartDTO;
 import com.example.ecom_backend.entity.Cart;
 import com.example.ecom_backend.entity.CustomUser;
 import com.example.ecom_backend.entity.Product;
+import com.example.ecom_backend.entity.Role;
 import com.example.ecom_backend.service.CartProductService;
 import com.example.ecom_backend.service.CartService;
 import com.example.ecom_backend.service.ProductService;
@@ -62,6 +63,8 @@ public class CartTests {
     @BeforeEach
     public void setup() {
         testUser = new CustomUser("test", passwordEncoder.encode("test"));
+        testUser.setRole(Role.USER);
+        testUser.setEmail("123@test.com");
         testUser.setEnabled(true);
         userService.save(testUser);
 

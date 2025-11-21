@@ -6,11 +6,13 @@ import com.example.ecom_backend.service.OrderService;
 import com.example.ecom_backend.service.ProductService;
 import com.example.ecom_backend.service.UserService;
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Profile("!test")
 @Service
 public class DashBoardService {
 

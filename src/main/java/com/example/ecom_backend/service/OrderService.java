@@ -48,7 +48,7 @@ public class OrderService {
         order.setFirstName(request.firstName());
         order.setLastName(request.lastName());
         order.setAddress(request.address());
-        for(CartProduct cartProduct : cartProducts) {
+        for (CartProduct cartProduct : cartProducts) {
             OrderProduct orderProduct = new OrderProduct();
             orderProduct.setOrder(order);
             orderProduct.setName(cartProduct.getName());
@@ -59,6 +59,11 @@ public class OrderService {
         //TODO: payment stuff... (would confirm order after verifying)
         order.setConfirmed(true);
         return orderRepo.save(order);
+    }
+
+    @Transactional
+    public void deleteAll() {
+        orderRepo.deleteAll();
     }
 
     public long getConfirmedOrderCount() {

@@ -12,12 +12,14 @@ import com.example.ecom_backend.service.UserService;
 import com.example.ecom_backend.stats.DashBoardService;
 import com.example.ecom_backend.stats.DashBoardStats;
 import jakarta.validation.Valid;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
+@Profile("!test")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
