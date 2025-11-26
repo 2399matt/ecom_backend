@@ -2,6 +2,7 @@ package com.example.ecom_backend.controller;
 
 import com.example.ecom_backend.dto.CartDTO;
 import com.example.ecom_backend.dto.DTOMapper;
+import com.example.ecom_backend.dto.JwtPrincipal;
 import com.example.ecom_backend.entity.CartProduct;
 import com.example.ecom_backend.entity.Product;
 import com.example.ecom_backend.event.ProductAddedEvent;
@@ -37,27 +38,29 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<CartDTO> findUserCart(@AuthenticationPrincipal EUserDetails userDetails) {
-        CartDTO cart = dtoMapper.toCartDTO(cartService.findUserCart(userDetails.getUser().getId()));
-        logger.info("Fetched user's cart with id: {}", userDetails.getUser().getId());
+    public ResponseEntity<CartDTO> findUserCart(@AuthenticationPrincipal JwtPrincipal principal) {
+        //CartDTO cart = dtoMapper.toCartDTO(cartService.findUserCart(userDetails.getUser().getId()));
+        //logger.info("Fetched user's cart with id: {}", userDetails.getUser().getId());
+        CartDTO cart = dtoMapper.toCartDTO(cartService.findUserCart(principal.id()));
+        logger.info("Fetched user's (ID: {}) cart", principal.id());
         return ResponseEntity.ok(cart);
     }
 
     @PutMapping("/add-item/{id}")
-    public ResponseEntity<Void> addItemToCart(@PathVariable("id") int productId, @AuthenticationPrincipal EUserDetails userDetails) {
+    public ResponseEntity<Void> addItemToCart(@PathVariable("id") int productId, @AuthenticationPrincipal JwtPrincipal principal) {
         Product product = productService.findById(productId);
-        cartService.addItem(userDetails.getUser().getId(), product);
+        cartService.addItem(principal.id(), product);
         eventPublisher.publishEvent(new ProductAddedEvent(product.getId()));
-        logger.info("Added product with id {} for user with id {}", productId, userDetails.getUser().getId());
+        logger.info("Added product with id {} for user with id {}", productId, principal.id());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/remove-item/{id}")
-    public ResponseEntity<Void> removeItemFromCart(@PathVariable("id") int cartProductId, @AuthenticationPrincipal EUserDetails userDetails) {
-        if (cartService.containsItem(userDetails.getUser().getId(), cartProductId)) {
+    public ResponseEntity<Void> removeItemFromCart(@PathVariable("id") int cartProductId, @AuthenticationPrincipal JwtPrincipal principal) {
+        if (cartService.containsItem(principal.id(), cartProductId)) {
             CartProduct cartProduct = cartProductService.findById(cartProductId);
-            logger.info("Removing Cart product with id: {} from user with id: {}", cartProductId, userDetails.getUser().getId());
-            cartService.removeItem(userDetails.getUser().getId(), cartProduct);
+            logger.info("Removing Cart product with id: {} from user with id: {}", cartProductId, principal.id());
+            cartService.removeItem(principal.id(), cartProduct);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -66,12 +69,10 @@ public class CartController {
     }
 
     @PutMapping("/clear")
-    public ResponseEntity<Void> clearCart(@AuthenticationPrincipal EUserDetails userDetails) {
-        logger.info("Clearing cart for user with id: {}", userDetails.getUser().getId());
-        cartService.clearCart(userDetails.getUser().getId());
+    public ResponseEntity<Void> clearCart(@AuthenticationPrincipal JwtPrincipal principal) {
+        logger.info("Clearing cart for user with id: {}", principal.id());
+        cartService.clearCart(principal.id());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    //TODO: Create Order entity and controller. /checkout endpoint will handle order creation.
-    // If successful, trigger an email event for confirmation and look into Stripe.
 }

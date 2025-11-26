@@ -1,8 +1,10 @@
 package com.example.ecom_backend.controller;
 
+import com.example.ecom_backend.dto.LoginRequest;
 import com.example.ecom_backend.dto.RegRequest;
 import com.example.ecom_backend.entity.CustomUser;
 import com.example.ecom_backend.exception.UsernameTakenException;
+import com.example.ecom_backend.security.EUserDetails;
 import com.example.ecom_backend.security.JwtService;
 import com.example.ecom_backend.service.RegistrationService;
 import jakarta.validation.Valid;
@@ -23,12 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class RegistrationController {
 
     private final RegistrationService registrationService;
-    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
     public RegistrationController(RegistrationService registrationService, JwtService jwtService, AuthenticationManager authenticationManager) {
         this.registrationService = registrationService;
-        this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
     }
 
@@ -43,12 +43,13 @@ public class RegistrationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> handleLogin(@Valid @RequestBody RegRequest request) {
+    public ResponseEntity<?> handleLogin(@Valid @RequestBody LoginRequest request) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(request.username(), request.password());
         Authentication authentication = authenticationManager.authenticate(authToken);
         if (authentication.isAuthenticated()) {
-            String jwt = jwtService.generateToken(request.username());
-            return ResponseEntity.ok(jwt);
+            EUserDetails userDetails = ((EUserDetails) authentication.getPrincipal());
+            String token = registrationService.generateToken(userDetails.getUsername(), userDetails.getUser().getId(), userDetails.getAuthorities());
+            return ResponseEntity.ok(token);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

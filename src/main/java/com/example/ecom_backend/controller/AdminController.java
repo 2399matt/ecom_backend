@@ -48,7 +48,7 @@ public class AdminController {
         return ResponseEntity.ok(dtoMapper.toOrderDTO(orderService.findAll()));
     }
 
-    @GetMapping("/dashboard-stats")
+    @GetMapping("/dashboard")
     public ResponseEntity<DashBoardStats> fetchDashBoardStats() {
         return ResponseEntity.ok(dashBoardService.getDashBoardStats());
     }
